@@ -1,40 +1,39 @@
-import { Request, Response,NextFunction } from "express";
-import UserService from "src/service/UserService";
-import { UserRequest } from "src/interface/oauthInterface";
+import { Request, Response, NextFunction } from "express";
+import UserService from "../service/UserService";  // Обратите внимание на путь импорта
 
-class UserController{ 
+class UserController {
+    static async createUserOAuth(req: Request, res: Response, next: NextFunction) {
+        try {
 
-    static async createUserYndexOAuth(req:Request, res:Response, next:NextFunction){ 
+            const { code } = req.body
 
-        try{ 
-            
-            console.log(req.body);
+            const provider = req.params.provider;
+            let userData;
 
-            const requestItem: UserRequest = req.body;
+            console.log(provider)
 
-            const userData = await UserService.CreateUserService( requestItem );
+            switch (provider) {
+                case 'yandex':
+                    userData = await UserService.CreateUserYandex(code, 'yandex');
+                    break;
+                case 'vkid':
+                    userData = await UserService.CreateUserVkId(code, 'vkid');
+                    break;
+                case 'ok':
+                    userData = await UserService.CreateUserOk(code, 'ok');
+                    break;
+                case 'mailru':
+                    userData = await UserService.CreateUserYandex(code, 'mailru');
+                    break;
+                default:
+                    throw new Error('Unknown provider');
+            }
 
             return res.json(userData);
-
-        }catch(e:any){ 
-            next(e)
-        }
-    }
-
-    static async createUserVKIDOAuth(req:Request,res:Response,next:NextFunction){ 
-
-        try{
-
-            console.log(req.body);
-
-            
-
-        }catch(e:any){ 
+        } catch (e: any) {
             next(e);
         }
-
     }
-
 }
 
-export default UserController
+export default UserController;

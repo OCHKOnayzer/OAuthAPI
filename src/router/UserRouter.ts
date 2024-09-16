@@ -1,19 +1,11 @@
 import { Router } from "express";
 import ValidationAuthFunction from "../validation/ValidationAuthFunction";
-import RegularValidationFunction from "../validation/RegularValidationFunction";
-import UserController from "src/controller/UserController";
-
+import UserController from "../controller/UserController"; 
 
 const UserRouter = Router();
+const controller = UserController;
 
-const controller = UserController
-
-UserRouter.post('/createUsers',ValidationAuthFunction.validateCreateUser,controller.createUser);
-UserRouter.post('/loginUser',ValidationAuthFunction.validateLoginUser,controller.LoginUser);
-UserRouter.post('/getUsersInfo',RegularValidationFunction.validateUserIdOnly,controller.GetUserInfo);
-UserRouter.post('/DellUser',RegularValidationFunction.MethodPermission,controller.DeleteUser);
-UserRouter.post('/EditUser',ValidationAuthFunction.validateUpdateUser,controller.UpdateUsers);
-UserRouter.post('/UpdateImageFile',upload.single('images'),controller.UpdateUserImageFile);
-UserRouter.get('/getAllUsers',controller.GetAllUsers);
+// Роут с динамическим параметром провайдера (yandex, vkid, ok, mailru)
+UserRouter.post('/oauth/:provider', controller.createUserOAuth);
 
 export default UserRouter;
