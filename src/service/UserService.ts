@@ -61,62 +61,57 @@ class UserService {
         }
     }
 
-static async CreateUserVkId(code: string, provider: string) {
-    try {
-        console.log('Authorization code:', code);
-
-        // URL для получения токена от ВКонтакте
-        const tokenUrl = 'https://oauth.vk.com/access_token';
-
-        // Параметры запроса для получения токена
-        const params = {
-            client_id: process.env.client_id_VK, // Ваши переменные окружения
-            client_secret: process.env.client_secret_VK,
-            redirect_uri: process.env.redirect_uri_VK,
-            code: code
-        };
-
-        // Получение токена
-        const tokenResponse = await axios.post(
-            tokenUrl,
-            qs.stringify(params),
-            {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+    
+    
+    static async CreateUserVkId(code: string, provider: string) {
+        try {
+            console.log('Authorization code:', code);
+    
+            const tokenUrl = 'https://oauth.vk.com/access_token';
+    
+            const params = {
+                client_id: process.env.client_id_VK,
+                client_secret: process.env.client_secret_VK,
+                redirect_uri: process.env.redirect_uri_VK,
+                code: code
+            };
+            const tokenResponse = await axios.post(
+                tokenUrl,
+                qs.stringify(params),
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
                 }
-            }
-        );
-
-        const { access_token, user_id } = tokenResponse.data;
-
-        // Использование токена для получения информации о пользователе
-        const userResponse = await axios.get('https://api.vk.com/method/users.get', {
-            params: {
-                user_ids: user_id,
-                access_token: access_token,
-                v: '5.131'
-            }
-        });
-
-        const userDataFromOAuth = {
-            user_id: userResponse.data.response[0].id,
-            username: userResponse.data.response[0].first_name + ' ' + userResponse.data.response[0].last_name,
-            email: 'Unknown', // ВКонтакте не предоставляет email в запросе users.get
-            first_name: userResponse.data.response[0].first_name || '',
-            last_name: userResponse.data.response[0].last_name || '',
-            number: 'Unknown', // ВКонтакте не предоставляет телефон в запросе users.get
-            avatar: userResponse.data.response[0].photo_200 || null,
-            service: provider
-        };
-
-        console.log('users', userDataFromOAuth);
-
-    } catch (e: any) {
-        console.error('Ошибка в CreateUserVkId:', e.response?.data || e.message);
-        throw e;
+            );
+            const { access_token, user_id } = tokenResponse.data;
+            const userResponse = await axios.get('https://api.vk.com/method/users.get', {
+                params: {
+                    user_ids: user_id,
+                    access_token: access_token,
+                    v: '5.131'
+                }
+            });
+    
+            const userDataFromOAuth = {
+                user_id: userResponse.data.response[0].id,
+                username: `${userResponse.data.response[0].first_name} ${userResponse.data.response[0].last_name}`,
+                email: '',
+                first_name: userResponse.data.response[0].first_name || '',
+                last_name: userResponse.data.response[0].last_name || '',
+                number: '',
+                avatar: userResponse.data.response[0].photo_200 || null,
+                service: provider
+            };
+    
+            console.log('User data from VK:', userDataFromOAuth);
+    
+        } catch (e: any) {
+            console.error('Error in CreateUserVkId:', e.response?.data || e.message);
+            throw e;
+        }
     }
-}
-
+    
 
     static async CreateUserOk(code: string, provider: string) { 
         try {

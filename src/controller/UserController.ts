@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import UserService from "../service/UserService";  // Обратите внимание на путь импорта
+import UserService from "../service/UserService";
 
 class UserController {
     static async createUserOAuth(req: Request, res: Response, next: NextFunction) {
