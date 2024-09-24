@@ -18,11 +18,12 @@ app.use(express.json());
 app.use(cookie());
 const allowedOrigins: string[] = [
     'http://localhost:3000',
-    'https://427e-88-80-62-218.ngrok-free.app' // Ваш ngrok URL
+    'https://8d47-92-39-220-81.ngrok-free.app'
   ];
   
   const corsOptions: CorsOptions = {
     origin: (origin, callback) => {
+      console.log(`CORS request from origin: ${origin}`);
       if (allowedOrigins.includes(origin!) || !origin) {
         callback(null, true);
       } else {
