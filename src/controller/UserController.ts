@@ -36,11 +36,11 @@ class UserController {
             }
 
             res.cookie('refreshToken', userData.refreshToken, {
-                httpOnly: true, // Доступ только на сервере
-                secure: true, // Только через HTTPS
-                sameSite: 'none', // Для поддержки кросс-доменных запросов
-                path: '/', // Доступ на всём домене
-                maxAge: 30 * 24 * 60 * 60 * 1000 // 30 дней
+                httpOnly: true, 
+                secure: true,
+                sameSite: 'none',
+                path: '/', 
+                maxAge: 30 * 24 * 60 * 60 * 1000
             });
 
             // для localhost

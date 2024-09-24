@@ -1,5 +1,4 @@
 import { Router } from "express";
-import ValidationAuthFunction from "../validation/ValidationAuthFunction";
 import UserController from "../controller/UserController"; 
 
 const UserRouter = Router();

@@ -163,7 +163,7 @@ describe('UserService', () => {
     
             (axios.post as jest.Mock).mockResolvedValueOnce({ data: tokenResponseData });
     
-            // Исправленная генерация сигнатуры
+           
             const sig = crypto
             .createHash('md5')
             .update(`application_key=CBGEGLLGDIHBABABA&method=users.getCurrentUser&access_token=${tokenResponseData.access_token}&client_secret=B67994B7C202C407DB827C7C`, 'utf8')

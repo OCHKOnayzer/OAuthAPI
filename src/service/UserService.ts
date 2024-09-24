@@ -21,7 +21,6 @@ class UserService {
         try {
             console.log(`Code received: ${code}`);
             
-            // Шаг 1: Обмен кода на токен
             const tokenResponse = await axios.post('https://oauth.yandex.ru/token', 
                 qs.stringify({
                     grant_type: 'authorization_code',
@@ -39,14 +38,12 @@ class UserService {
     
             const { access_token } = tokenResponse.data;
     
-            // Шаг 2: Получение данных пользователя
             const userResponse = await axios.get('https://login.yandex.ru/info', {
                 headers: {
                     Authorization: `Bearer ${access_token}`
                 }
             });
     
-            // Шаг 3: Форматирование данных пользователя
             const userDataFromOAuth = {
                 user_id: userResponse.data.id,
                 email: userResponse.data.default_email || 'hidden',
@@ -55,15 +52,13 @@ class UserService {
                 number: userResponse.data.default_phone?.number || '',
                 service: provider
             };
-    
-            // Шаг 4: Найти и обновить или создать нового пользователя
+
             let newUser = await userModel.findOneAndUpdate(
                 { user_id: userDataFromOAuth.user_id },
                 userDataFromOAuth,
                 { new: true, upsert: true }
             ); 
     
-            // Создание DTO и генерация токенов
             const dto = new userDTO(newUser);
             const tokens = generationTokens({ ...dto });
     
@@ -71,7 +66,6 @@ class UserService {
 
             await saveToken(dto._id, tokens.refreshToken);
     
-            // Возвращаем объект с пользователем и токенами
             return { 
                 user: newUser, 
                 accessToken: tokens.accessToken, 
@@ -174,7 +168,6 @@ class UserService {
           console.log('Refresh token:', refresh_token);
           console.log('ID token:', id_token);
       
-          // Запрашиваем данные пользователя через access_token
           const userInfoResponse = await axios.get('https://id.vk.com/oauth2/user_info', {
             params: {
               access_token: access_token,
@@ -183,7 +176,6 @@ class UserService {
       
           const user = userInfoResponse.data;
       
-          // Обработка данных пользователя
           const userDataFromOAuth = {
             user_id: user.sub,
             first_name: user.given_name,
@@ -262,7 +254,6 @@ class UserService {
     
             const userInfoResponse = await axios.get(userInfoUrl);
     
-            // Проверка и получение отчества
             const userDataFromOAuth = { 
                 user_id: userInfoResponse.data.uid,
                 email: userInfoResponse.data.email || '', 
@@ -284,7 +275,6 @@ class UserService {
 
             await saveToken(dto._id, tokens.refreshToken);
     
-            // Возвращаем объект с пользователем и токенами
             return { 
                 user: newUser, 
                 accessToken: tokens.accessToken, 
@@ -302,14 +292,12 @@ class UserService {
             console.log('Authorization code:', code);
     
             const tokenUrl = 'https://oauth.mail.ru/token';
-            const redirectUri = 'http://localhost:3000'; // должен совпадать с настройками вашего приложения
+            const redirectUri = 'http://localhost:3000';
     
-            // Формируем заголовок для базовой авторизации
-            const clientId = '91bdcb05404e4dad9fdee6d080c7426c'; // Ваш client_id
-            const clientSecret = 'fc2e60c36748476eb73665bcc822e56a'; // Ваш client_secret
+            const clientId = '91bdcb05404e4dad9fdee6d080c7426c';
+            const clientSecret = 'fc2e60c36748476eb73665bcc822e56a';
             const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
     
-            // Параметры запроса
             const params = {
                 grant_type: 'authorization_code',
                 code: code,
@@ -317,7 +305,6 @@ class UserService {
                 scope: 'userinfo,contacts',
             };
     
-            // Запрос на получение токена
             const tokenResponse = await axios.post(tokenUrl, qs.stringify(params), {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -328,8 +315,7 @@ class UserService {
             const { access_token, expires_in } = tokenResponse.data;
             console.log('Access Token:', access_token);
             console.log('Expires In:', expires_in);
-    
-            // Запрос данных о пользователе
+
             const userInfoUrl = `https://oauth.mail.ru/userinfo?access_token=${access_token}`;
             const userInfoResponse = await axios.get(userInfoUrl);
     
@@ -339,7 +325,6 @@ class UserService {
                 throw new Error('User ID is missing from Mail.ru response');
             }
     
-            // Формируем данные о пользователе только с валидными полями
             const userDataFromOAuth = {
                 user_id: id,
                 email: email,
@@ -348,12 +333,11 @@ class UserService {
                 number: '',
                 service: 'mailru'
             };
-    
-            // Сохраняем или обновляем пользователя в базе данных
+
             const newUser = await userModel.findOneAndUpdate(
-                { user_id: userDataFromOAuth.user_id }, // проверка на уникальный user_id
-                { $set: userDataFromOAuth }, // обновление только тех полей, которые указаны
-                { new: true, upsert: true } // upsert создаст новый документ, если не найдет существующий
+                { user_id: userDataFromOAuth.user_id },
+                { $set: userDataFromOAuth },
+                { new: true, upsert: true }
             );
     
             const dto = new userDTO(newUser);

@@ -33,7 +33,7 @@ describe('UserService', () => {
             const code = 'testCode';
             const provider = 'vk';
 
-            // Мок ответа от VK для получения токена
+           
             const tokenResponseData = {
                 access_token: 'vkAccessToken',
                 user_id: 'vkUserId123',
@@ -41,7 +41,6 @@ describe('UserService', () => {
             };
             (axios.post as jest.Mock).mockResolvedValueOnce({ data: tokenResponseData });
 
-            // Мок ответа от VK для получения данных о пользователе
             const userResponseData = {
                 response: [{
                     id: 'vkUserId123',
@@ -79,10 +78,8 @@ describe('UserService', () => {
             });
             (saveToken as jest.Mock).mockResolvedValueOnce(true);
 
-            // Вызов тестируемого метода
             const result = await UserService.CreateUserVkId(code, provider);
 
-            // Проверка вызова запросов на получение токена
             expect(axios.post).toHaveBeenCalledWith(
                 'https://oauth.vk.com/access_token',
                 qs.stringify({
@@ -94,7 +91,6 @@ describe('UserService', () => {
                 { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
             );
 
-            // Проверка вызова запроса на получение данных пользователя
             expect(axios.get).toHaveBeenCalledWith('https://api.vk.com/method/users.get', {
                 params: {
                     user_ids: tokenResponseData.user_id,
@@ -103,7 +99,6 @@ describe('UserService', () => {
                 },
             });
 
-            // Проверка вызова обновления или создания пользователя
             expect(userModel.findOneAndUpdate).toHaveBeenCalledWith(
                 { user_id: userResponseData.response[0].id },
                 {
@@ -117,7 +112,6 @@ describe('UserService', () => {
                 { new: true, upsert: true }
             );
 
-            // Проверка генерации токенов
             expect(generationTokens).toHaveBeenCalledWith({
                 _id: mockUser._id,
                 user_id: mockUser.user_id,
@@ -128,10 +122,8 @@ describe('UserService', () => {
                 service: provider,
             });
 
-            // Проверка сохранения refresh-токена
             expect(saveToken).toHaveBeenCalledWith(mockUser._id, 'testRefreshToken');
 
-            // Проверка результата функции
             expect(result).toEqual({
                 user: mockUser,
                 accessToken: 'testAccessToken',
@@ -144,12 +136,10 @@ describe('UserService', () => {
             const code = 'testCode';
             const provider = 'vk';
 
-            // Мок для ошибки при запросе токена
             (axios.post as jest.Mock).mockRejectedValueOnce(new Error('VK OAuth error'));
 
             await expect(UserService.CreateUserVkId(code, provider)).rejects.toThrow('VK OAuth error');
 
-            // Проверка, что ошибка была выброшена
             expect(axios.post).toHaveBeenCalled();
         });
     });
