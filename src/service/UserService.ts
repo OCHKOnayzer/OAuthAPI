@@ -192,16 +192,13 @@ class UserService {
                   }
                 }
               );
-              
-              const user = userInfoResponse.data;
-              console.log('User info from VK ID:', user.first_name);
-    
+             
             const userDataFromOAuth = {
-                user_id: userInfoResponse.data.user_id,
-                first_name: user.first_name,
-                last_name: user.last_name,
-                email: user.email || '',
-                number: user.phone || '',
+                user_id:userInfoResponse.data.user.user_id,
+                first_name: userInfoResponse.data.user.first_name,
+                last_name:userInfoResponse.data.user.last_name,
+                email: userInfoResponse.data.user.email|| '',
+                number: userInfoResponse.data.user.phone,
                 service: 'vkId'
             };
     
