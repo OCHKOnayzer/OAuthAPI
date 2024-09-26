@@ -168,7 +168,7 @@ class UserService {
                 new URLSearchParams({
                     grant_type: 'authorization_code',
                     code_verifier: codeVerifire, 
-                    redirect_uri: 'https://main--transcendent-frangipane-30b77b.netlify.app/vkIdTest/VkIdAuthTest', 
+                    redirect_uri: 'https://main--transcendent-frangipane-30b77b.netlify.app/vkIdTest', 
                     code: code, 
                     client_id: '52336772',
                     device_id: deviceId,      
@@ -214,7 +214,7 @@ class UserService {
             //     email: user.email || '',  // Email пользователя (если доступен)
             //     number: user.phone_number || '',  // Телефонный номер (если доступен)
             //     service: 'vkId'
-            // };
+            // };й
     
             // console.log('User data from VK ID:', userDataFromOAuth);
     
