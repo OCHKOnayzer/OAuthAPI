@@ -158,27 +158,22 @@ class UserService {
 
         console.log('hello world')
 
-        const codeVerifire = 'FGH767Gd65dsf76TgBh98vGbvDsF7GhEtr67G4Rf';
+        const codeVerifier = 'FGH767Gd65dsf76Tgfh98vGbvDsF7GhEtr67gtjhufFGH767Gd65dsf76TggBh98vGbv';
 
         try {
             // Запрос на обмен кода авторизации на токены
-            const tokenResponse = await axios.post('https://id.vk.com/oauth2/auth', 
-                new URLSearchParams({
-                    grant_type: 'authorization_code',
-                    code_verifier: codeVerifire, 
-                    redirect_uri: 'https://main--transcendent-frangipane-30b77b.netlify.app/vkIdTest', 
-                    code: code, 
-                    client_id: '52336772',
-                    device_id: deviceId,      
-                    state: stateString
-                }), 
-                {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                }
-            );
-
+            const tokenResponse = await axios.post('https://oauth.vk.com/access_token', null, {
+                params: {
+                    client_id: '52336772',  // Ваш ID приложения
+                    client_secret: 'AS3kkxNRkxvMlVDyfkuF',
+                    redirect_uri: 'https://main--transcendent-frangipane-30b77b.netlify.app/vkIdTest',
+                    code: code,
+                    code_verifier: codeVerifier,  // Правильное название параметра
+                },
+            });
+        
+         
+          
             console.log("tokenResponse.data:",tokenResponse.data)
 
 

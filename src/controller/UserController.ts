@@ -9,9 +9,7 @@ class UserController {
         try {
             const { code, deviceId,stateString } = req.body;
 
-            console.log("request body",req.body);
-
-            console.log('Request body:', { code });
+            console.log("request body",req.body)
 
             console.log('request params:',req.params)
 
