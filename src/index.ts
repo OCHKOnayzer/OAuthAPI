@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(cookie());
 const allowedOrigins: string[] = [
     'http://localhost:3000',
-    'https://8d47-92-39-220-81.ngrok-free.app'
+    'https://main--transcendent-frangipane-30b77b.netlify.app'
   ];
   
   const corsOptions: CorsOptions = {

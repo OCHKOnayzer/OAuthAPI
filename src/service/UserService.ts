@@ -7,6 +7,7 @@ import crypto from 'crypto';
 import { generationTokens, removeToken, saveToken } from "../tokens/tokenService";
 import userDTO from "../dto/userDTO";
 import { Types } from "mongoose";
+import * as VKID from '@vkid/sdk';
 
 interface OAuthResponse {
     user: userDTO;
@@ -152,65 +153,98 @@ class UserService {
             throw e;
         }
     }
-    static async CreateUserVkIdId(code: string): Promise<OAuthResponse> {
+    
+    static async CreateUserVkIdId(code: string,deviceId:string,stateString:string){
+
+        console.log('hello world')
+
+        const codeVerifire = 'FGH767Gd65dsf76TgBh98vGbvDsF7GhEtr67GtRf';
+
+        const clientId = 52336772
+
         try {
-          const tokenResponse = await axios.post('https://id.vk.com/oauth2/token', {
-            grant_type: 'authorization_code',
-            client_id: '52336772',
-            client_secret: 'AS3kkxNRkxvMlVDyfkuF',
-            redirect_uri: 'https://e35f-92-39-220-81.ngrok-free.app',
-            code: code,
-          });
-      
-          const { access_token, refresh_token, id_token } = tokenResponse.data;
-      
-          console.log('Access token:', access_token);
-          console.log('Refresh token:', refresh_token);
-          console.log('ID token:', id_token);
-      
-          const userInfoResponse = await axios.get('https://id.vk.com/oauth2/user_info', {
-            params: {
-              access_token: access_token,
-            }
-          });
-      
-          const user = userInfoResponse.data;
-      
-          const userDataFromOAuth = {
-            user_id: user.sub,
-            first_name: user.given_name,
-            last_name: user.family_name,
-            email: user.email || '',
-            number: user.phone_number || '',
-            service: 'vkId'
-          };
-      
-          console.log('User data from VK ID:', userDataFromOAuth);
-      
-          let newUser = await userModel.findOneAndUpdate(
-            { user_id: userDataFromOAuth.user_id },
-            userDataFromOAuth,
-            { new: true, upsert: true }
-          );
-      
-          const dto = new userDTO(newUser);
-          const tokens = generationTokens({ ...dto });
-      
-          await saveToken(dto._id, tokens.refreshToken);
-      
-          return {
-            user: newUser,
-            accessToken: tokens.accessToken,
-            refreshToken: tokens.refreshToken,
-            provider: 'vkId'
-          };
-      
+            // Запрос на обмен кода авторизации на токены
+            const tokenResponse = await axios.post('https://id.vk.com/oauth2/auth', 
+                new URLSearchParams({
+                    grant_type: 'authorization_code',
+                    code: code, 
+                    client_id: 'AXKbf0z9tG2lugDm9YKRmnmihXWuzOZAe3rLec3zVcI',
+                    code_verifier: codeVerifire, // Передаем code_verifier
+                    device_id: deviceId,         // Уникальный ID устройства
+                    redirect_uri: 'https://main--transcendent-frangipane-30b77b.netlify.app', // Совпадает с тем, что был на втором шаге
+                    state: stateString           // State, если использовался
+                }), 
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }
+            );
+
+            console.log("tokenResponse.data:",tokenResponse.data)
+
+
+
+            // console.log("tokenResponse:",tokenResponse)
+
+            // // Извлечение токенов из ответа
+            // const { access_token, refresh_token } = tokenResponse.data;
+    
+            // // Логирование для отладки
+            // console.log('Access token:', access_token);
+            // console.log('Refresh token:', refresh_token);
+    
+            // // Запрос на получение информации о пользователе
+            // const userInfoResponse = await axios.get('https://id.vk.com/oauth2/user_info', {
+            //     params: {
+            //         access_token: access_token,
+            //     }
+            // });
+    
+            // // Извлечение данных о пользователе
+            // const user = userInfoResponse.data;
+    
+            // console.log('User info from VK ID:', user);
+    
+            // // Формирование данных пользователя для базы данных
+            // const userDataFromOAuth = {
+            //     user_id: user.sub,  // Уникальный идентификатор пользователя
+            //     first_name: user.given_name,  // Имя пользователя
+            //     last_name: user.family_name,  // Фамилия пользователя
+            //     email: user.email || '',  // Email пользователя (если доступен)
+            //     number: user.phone_number || '',  // Телефонный номер (если доступен)
+            //     service: 'vkId'
+            // };
+    
+            // console.log('User data from VK ID:', userDataFromOAuth);
+    
+            // // Обновление или создание пользователя в базе данных
+            // let newUser = await userModel.findOneAndUpdate(
+            //     { user_id: userDataFromOAuth.user_id },
+            //     userDataFromOAuth,
+            //     { new: true, upsert: true }
+            // );
+    
+            // // Генерация пользовательских токенов
+            // const dto = new userDTO(newUser);
+            // const tokens = generationTokens({ ...dto });
+    
+            // // Сохранение refresh-токена
+            // await saveToken(dto._id, tokens.refreshToken);
+    
+            // return {
+            //     user: newUser,
+            //     accessToken: tokens.accessToken,
+            //     refreshToken: tokens.refreshToken,
+            //     provider: 'vkId'
+            // };
+    
         } catch (error: any) {
-          console.error('Ошибка в CreateUserVkId:', error.response?.data || error.message);
-          throw error;
+            // Логирование ошибки
+            console.error('Ошибка в createUserWithVkId:', error.response ? error.response.data : error.message, error);
+            throw error;
         }
-      }
-      
+    }
     
       static async CreateUserOk(code: string, provider: string): Promise<OAuthResponse> {
         try {
@@ -325,6 +359,8 @@ class UserService {
                 throw new Error('User ID is missing from Mail.ru response');
             }
     
+            console.log("data json fromatik:",userInfoResponse.data)
+
             const userDataFromOAuth = {
                 user_id: id,
                 email: email,

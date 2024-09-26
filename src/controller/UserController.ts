@@ -7,10 +7,18 @@ import axios from "axios";
 class UserController {
     static async createUserOAuth(req: Request, res: Response, next: NextFunction) {
         try {
-            const { code, user } = req.body;
+            const { code, deviceId,stateString } = req.body;
+
+            console.log("request body",req.body);
+
             console.log('Request body:', { code });
 
+            console.log('request params:',req.params)
+
             const provider = req.params.provider;
+
+            console.log("device:",deviceId)
+
             let userData: any;
 
             console.log("provider:",provider)
@@ -26,10 +34,10 @@ class UserController {
                     userData = await UserService.CreateUserOk(code, 'ok');
                     break;
                 case 'vkid':
-                    userData = await UserService.CreateUserVkIdId(code);
+                    userData = await UserService.CreateUserVkIdId(code,deviceId,stateString);
                     break;
                 case 'mailru':
-                    userData = await UserService.CreateUserMailRu(code, user);
+                    userData = await UserService.CreateUserMailRu(code, 'mailru');
                     break;
                 default:
                     throw new Error('Неподдерживаемый провайдер');
