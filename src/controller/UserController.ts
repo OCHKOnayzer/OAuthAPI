@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import UserService from "../service/UserService";
 import refreshService from "../service/refreshService";
-import axios from "axios";
-
 
 class UserController {
     static async createUserOAuth(req: Request, res: Response, next: NextFunction) {

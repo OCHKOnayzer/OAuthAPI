@@ -161,7 +161,6 @@ class UserService {
         // const code_verifier = 'FGH767Gd65dsf76TgBh98vGFFDsF7GhEtr67gFGhufFGH767Gd65dsf76TFggBh98vGbv';
 
         try {
-            // Запрос на обмен кода авторизации на токены
             const tokenResponse = await axios.post('https://id.vk.com/oauth2/auth', 
                 new URLSearchParams({
                     grant_type: 'authorization_code',
@@ -180,15 +179,10 @@ class UserService {
             );
 
             console.log("tokenResponse.data:",tokenResponse.data)
-
-            // Извлечение токенов из ответа
             const { access_token, refresh_token } = tokenResponse.data;
-    
-            // Логирование для отладки
             console.log('Access token:', access_token);
             console.log('Refresh token:', refresh_token);
     
-            // Запрос на получение информации о пользователе
             const userInfoResponse = await axios.post(
                 'https://id.vk.com/oauth2/user_info',
                 new URLSearchParams({
@@ -205,30 +199,26 @@ class UserService {
               const user = userInfoResponse.data;
               console.log('User info from VK ID:', user.first_name);
     
-            // Формирование данных пользователя для базы данных
             const userDataFromOAuth = {
-                user_id: userInfoResponse.data.user_id,  // Уникальный идентификатор пользователя
-                first_name: user.first_name,  // Имя пользователя
-                last_name: user.last_name,  // Фамилия пользователя
-                email: user.email || '',  // Email пользователя (если доступен)
-                number: user.phone || '',  // Телефонный номер (если доступен)
+                user_id: userInfoResponse.data.user_id,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email || '',
+                number: user.phone || '',
                 service: 'vkId'
             };
     
             console.log('User data from VK ID:', userDataFromOAuth);
     
-            // Обновление или создание пользователя в базе данных
             let newUser = await userModel.findOneAndUpdate(
                 { user_id: userDataFromOAuth.user_id },
                 userDataFromOAuth,
                 { new: true, upsert: true }
             );
     
-            // Генерация пользовательских токенов
             const dto = new userDTO(newUser);
             const tokens = generationTokens({ ...dto });
     
-            // Сохранение refresh-токена
             await saveToken(dto._id, tokens.refreshToken);
     
             return {
@@ -239,7 +229,6 @@ class UserService {
             };
     
         } catch (error: any) {
-            // Логирование ошибки
             console.error('Ошибка в createUserWithVkId:', error.response ? error.response.data : error.message, error);
             throw error;
         }
