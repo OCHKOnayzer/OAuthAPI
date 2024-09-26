@@ -7,6 +7,7 @@ const controller = UserController;
 UserRouter.post('/oauth/:provider', controller.createUserOAuth);
 UserRouter.get('/checkAuth',controller.checkAuth)
 UserRouter.post('/logout',controller.logout)
+// UserRouter.post('/getChalangerCode')
 
 export default UserRouter;
     
