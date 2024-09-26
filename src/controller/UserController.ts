@@ -7,7 +7,7 @@ import axios from "axios";
 class UserController {
     static async createUserOAuth(req: Request, res: Response, next: NextFunction) {
         try {
-            const { code, deviceId,stateString } = req.body;
+            const { code, deviceId,stateString,codeVerifier } = req.body;
 
             console.log("request body",req.body)
 
@@ -32,7 +32,7 @@ class UserController {
                     userData = await UserService.CreateUserOk(code, 'ok');
                     break;
                 case 'vkid':
-                    userData = await UserService.CreateUserVkIdId(code,deviceId,stateString);
+                    userData = await UserService.CreateUserVkIdId(code,deviceId,stateString,codeVerifier);
                     break;
                 case 'mailru':
                     userData = await UserService.CreateUserMailRu(code, 'mailru');

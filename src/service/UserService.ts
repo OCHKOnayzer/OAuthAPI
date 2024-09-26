@@ -154,26 +154,31 @@ class UserService {
         }
     }
     
-    static async CreateUserVkIdId(code: string,deviceId:string,stateString:string){
+    static async CreateUserVkIdId(code: string,deviceId:string,stateString:string,codeVerifier:string){
 
         console.log('hello world')
 
-        const codeVerifier = 'FGH767Gd65dsf76Tgfh98vGbvDsF7GhEtr67gtjhufFGH767Gd65dsf76TggBh98vGbv';
+        // const code_verifier = 'FGH767Gd65dsf76TgBh98vGFFDsF7GhEtr67gFGhufFGH767Gd65dsf76TFggBh98vGbv';
 
         try {
             // Запрос на обмен кода авторизации на токены
-            const tokenResponse = await axios.post('https://oauth.vk.com/access_token', null, {
-                params: {
-                    client_id: '52336772',  // Ваш ID приложения
-                    client_secret: 'AS3kkxNRkxvMlVDyfkuF',
-                    redirect_uri: 'https://main--transcendent-frangipane-30b77b.netlify.app/vkIdTest',
-                    code: code,
-                    code_verifier: codeVerifier,  // Правильное название параметра
-                },
-            });
-        
-         
-          
+            const tokenResponse = await axios.post('https://id.vk.com/oauth2/auth', 
+                new URLSearchParams({
+                    grant_type: 'authorization_code',
+                    code_verifier: codeVerifier, 
+                    redirect_uri: 'https://main--transcendent-frangipane-30b77b.netlify.app/vkIdTest', 
+                    code: code, 
+                    client_id: '52336772',
+                    device_id: deviceId,      
+                    state: stateString
+                }), 
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }
+            );
+
             console.log("tokenResponse.data:",tokenResponse.data)
 
 
