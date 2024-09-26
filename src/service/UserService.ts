@@ -168,7 +168,7 @@ class UserService {
                 new URLSearchParams({
                     grant_type: 'authorization_code',
                     code_verifier: codeVerifire, 
-                    redirect_uri: 'https://main--transcendent-frangipane-30b77b.netlify.app/vkIdTest', 
+                    redirect_uri: 'https://main--transcendent-frangipane-30b77b.netlify.app/vkIdTest/VkIdAuthTest', 
                     code: code, 
                     client_id: '52336772',
                     device_id: deviceId,      
