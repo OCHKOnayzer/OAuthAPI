@@ -37,7 +37,7 @@ describe('UserService', () => {
                 access_token: 'vkAccessToken',
                 refresh_token: 'vkRefreshToken',
                 user_id: 'vkUserId123',
-                email: '',  // Пустой email, так как может не быть доступен
+                email: '',
             };
             (axios.post as jest.Mock).mockResolvedValueOnce({ data: tokenResponseData });
 
@@ -52,7 +52,7 @@ describe('UserService', () => {
             const mockUser = {
                 _id: 'vkUserId123',
                 user_id: 'vkUserId123',
-                email: tokenResponseData.email || '',  // Если email пустой
+                email: tokenResponseData.email || '',
                 first_name: userResponseData.first_name,
                 last_name: userResponseData.last_name,
                 number: userResponseData.phone,
@@ -109,7 +109,7 @@ describe('UserService', () => {
                     user_id: userResponseData.user_id,
                     first_name: userResponseData.first_name,
                     last_name: userResponseData.last_name,
-                    email: tokenResponseData.email || '',  // Обработка пустого email
+                    email: tokenResponseData.email || '',
                     number: userResponseData.phone,
                     service: 'vkId',
                 },
