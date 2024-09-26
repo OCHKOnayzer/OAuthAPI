@@ -1,0 +1,23 @@
+user: {
+    user_id: '204040088',
+    first_name: 'Антон',
+    last_name: 'Б.',
+    phone: '791234521138',
+    avatar: 'https://sun59-1.userapi.com/s/v1/ig1/I08I3d2WJ3g8qYRgW-DKS2-HRtwax85VQfn4frRFgvTsXNs_LMgLR1Oa5lxGVEatoV-Kdj-Y.jpg?quality=96&crop=190,44,281,281&as=32x32,48x48,72x72,108x108,160x160,240x240&ava=1&cs=50x50',
+    email: 'tichedibil@vk.com',
+    sex: 2,
+    verified: false,
+    birthday: '27.04.1986'
+}
+
+user: {
+    user_id: '20457088',
+    first_name: 'мяяяяяяяяяяяяяяяу',
+    last_name: 'М.',
+    phone: '791234521138',
+    avatar: 'https://sun59-1.userapi.com/s/v1/ig1/I08I3d2WJ3g8qYRgW-DKS2-HRtwax85VQfn4frRFgvTsXNs_LMgLR1Oa5lxGVEatoV-Kdj-Y.jpg?quality=96&crop=190,44,281,281&as=32x32,48x48,72x72,108x108,160x160,240x240&ava=1&cs=50x50',
+    email: '',
+    sex: 2,
+    verified: false,
+    birthday: '27.04.2006'
+}

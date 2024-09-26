@@ -1,0 +1,7 @@
+ user_id: '352343739366',
+  username: 'puchipido',
+  email: 'popsof@yandex.ru',
+  first_name: 'Антон',
+  last_name: 'Белоногов',
+  number: '+79124234328',
+  avatar: '53031/9V2aZLHA1XeFJDdxZVavq8TQxkY-1',

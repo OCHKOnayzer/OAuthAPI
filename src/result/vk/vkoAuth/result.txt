@@ -1,0 +1,17 @@
+User data from VK: {
+  user_id: 532569338,
+  email: 'pochta@yandex.ru',
+  first_name: 'Антон',
+  last_name: 'Белоногов',
+  number: '',
+  service: 'vk'
+}
+
+User data from VK: {
+  user_id: 534569338,
+  email: '',
+  first_name: 'мяяяяяяяяяяяяяяяу',
+  last_name: 'мяу',
+  number: '',
+  service: 'vk'
+}
