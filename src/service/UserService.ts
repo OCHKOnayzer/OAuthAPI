@@ -2,12 +2,9 @@ import ApiError from "../ApiError/ApiErrors";
 import userModel from "../model/userModel";
 import qs from 'qs';
 import axios from 'axios';
-import TokenModel from "../model/TokenModel";
 import crypto from 'crypto';
 import { generationTokens, removeToken, saveToken } from "../tokens/tokenService";
 import userDTO from "../dto/userDTO";
-import { Types } from "mongoose";
-import * as VKID from '@vkid/sdk';
 
 interface OAuthResponse {
     user: userDTO;
