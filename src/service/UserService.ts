@@ -167,12 +167,12 @@ class UserService {
             const tokenResponse = await axios.post('https://id.vk.com/oauth2/auth', 
                 new URLSearchParams({
                     grant_type: 'authorization_code',
+                    code_verifier: codeVerifire, 
+                    redirect_uri: 'https://main--transcendent-frangipane-30b77b.netlify.app/vkIdTest', 
                     code: code, 
-                    client_id: 'AXKbf0z9tG2lugDm9YKRmnmihXWuzOZAe3rLec3zVcI',
-                    code_verifier: codeVerifire, // Передаем code_verifier
-                    device_id: deviceId,         // Уникальный ID устройства
-                    redirect_uri: 'https://main--transcendent-frangipane-30b77b.netlify.app', // Совпадает с тем, что был на втором шаге
-                    state: stateString           // State, если использовался
+                    client_id: '52336772',
+                    device_id: deviceId,      
+                    state: stateString
                 }), 
                 {
                     headers: {
