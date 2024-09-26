@@ -33,29 +33,33 @@ describe('UserService', () => {
             const stateString = 'testState';
             const codeVerifier = 'testCodeVerifier';
 
+            // Ответ от сервера при обмене кода на токен
             const tokenResponseData = {
                 access_token: 'vkAccessToken',
                 refresh_token: 'vkRefreshToken',
-                user_id: 'vkUserId123',
-                email: '',
             };
             (axios.post as jest.Mock).mockResolvedValueOnce({ data: tokenResponseData });
 
-            const userResponseData = {
-                user_id: 'vkUserId123',
-                first_name: 'Test',
-                last_name: 'User',
-                phone: '79124422128',
+            // Ответ от сервера с данными пользователя
+            const userInfoResponseData = {
+                user: {
+                    user_id: 'vkUserId123',
+                    first_name: 'Test',
+                    last_name: 'User',
+                    phone: '79124422128',
+                    email: '',
+                }
             };
-            (axios.post as jest.Mock).mockResolvedValueOnce({ data: userResponseData });
+            (axios.post as jest.Mock).mockResolvedValueOnce({ data: userInfoResponseData });
 
+            // Мок объекта пользователя
             const mockUser = {
                 _id: 'vkUserId123',
                 user_id: 'vkUserId123',
-                email: tokenResponseData.email || '',
-                first_name: userResponseData.first_name,
-                last_name: userResponseData.last_name,
-                number: userResponseData.phone,
+                email: userInfoResponseData.user.email || '',
+                first_name: userInfoResponseData.user.first_name,
+                last_name: userInfoResponseData.user.last_name,
+                number: userInfoResponseData.user.phone,
                 service: 'vkId',
             };
             (userModel.findOneAndUpdate as jest.Mock).mockResolvedValueOnce(mockUser);
@@ -104,13 +108,13 @@ describe('UserService', () => {
             );
 
             expect(userModel.findOneAndUpdate).toHaveBeenCalledWith(
-                { user_id: userResponseData.user_id },
+                { user_id: userInfoResponseData.user.user_id },
                 {
-                    user_id: userResponseData.user_id,
-                    first_name: userResponseData.first_name,
-                    last_name: userResponseData.last_name,
-                    email: tokenResponseData.email || '',
-                    number: userResponseData.phone,
+                    user_id: userInfoResponseData.user.user_id,
+                    first_name: userInfoResponseData.user.first_name,
+                    last_name: userInfoResponseData.user.last_name,
+                    email: userInfoResponseData.user.email || '',
+                    number: userInfoResponseData.user.phone,
                     service: 'vkId',
                 },
                 { new: true, upsert: true }
