@@ -158,9 +158,7 @@ class UserService {
 
         console.log('hello world')
 
-        const codeVerifire = 'FGH767Gd65dsf76TgBh98vGbvDsF7GhEtr67GtRf';
-
-        const clientId = 52336772
+        const codeVerifire = 'FGH767Gd65dsf76TgBh98vGbvDsF7GhEtr67G4Rf';
 
         try {
             // Запрос на обмен кода авторизации на токены
