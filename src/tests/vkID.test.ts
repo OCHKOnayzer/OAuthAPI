@@ -33,14 +33,12 @@ describe('UserService', () => {
             const stateString = 'testState';
             const codeVerifier = 'testCodeVerifier';
 
-            // Ответ от сервера при обмене кода на токен
             const tokenResponseData = {
                 access_token: 'vkAccessToken',
                 refresh_token: 'vkRefreshToken',
             };
             (axios.post as jest.Mock).mockResolvedValueOnce({ data: tokenResponseData });
 
-            // Ответ от сервера с данными пользователя
             const userInfoResponseData = {
                 user: {
                     user_id: 'vkUserId123',
@@ -52,7 +50,6 @@ describe('UserService', () => {
             };
             (axios.post as jest.Mock).mockResolvedValueOnce({ data: userInfoResponseData });
 
-            // Мок объекта пользователя
             const mockUser = {
                 _id: 'vkUserId123',
                 user_id: 'vkUserId123',
