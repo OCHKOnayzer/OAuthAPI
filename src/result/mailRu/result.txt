@@ -2,5 +2,4 @@
 "email": "estyprobitie@mail.ru",
 "first_name": "Антон",
 "last_name": "Белоногов",
-"number": "",
-"service": "mailru"
+"number": ""
