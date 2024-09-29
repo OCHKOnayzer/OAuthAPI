@@ -4,7 +4,6 @@ User data from VK: {
   first_name: 'Антон',
   last_name: 'Белоногов',
   number: '',
-  service: 'vk'
 }
 
 User data from VK: {
@@ -13,5 +12,4 @@ User data from VK: {
   first_name: 'мяяяяяяяяяяяяяяяу',
   last_name: 'мяу',
   number: '',
-  service: 'vk'
 }
